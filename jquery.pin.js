@@ -8,8 +8,12 @@
         var recalculateLimits = function () {
             for (var i=0, len=elements.length; i<len; i++) {
                 var $this = elements[i];
+                var $container = options.containerSelector ? $this.closest(options.containerSelector) : $(document.body);
+                var offset = $this.offset();
+                var containerOffset = $container.offset();
+                var parentOffset = $this.offsetParent().offset();
 
-                if (options.minWidth && $window.width() <= options.minWidth) {
+                if (options.minWidth && $window.width() <= options.minWidth || $this.height() >= $container.height()) {
                     if ($this.parent().is(".pin-wrapper")) { $this.unwrap(); }
                     $this.css({width: "", left: "", top: "", position: ""});
                     if (options.activeClass) { $this.removeClass(options.activeClass); }
@@ -18,11 +22,6 @@
                 } else {
                     disabled = false;
                 }
-
-                var $container = options.containerSelector ? $this.closest(options.containerSelector) : $(document.body);
-                var offset = $this.offset();
-                var containerOffset = $container.offset();
-                var parentOffset = $this.offsetParent().offset();
 
                 if (!$this.parent().is(".pin-wrapper")) {
                     $this.wrap("<div class='pin-wrapper'>");
